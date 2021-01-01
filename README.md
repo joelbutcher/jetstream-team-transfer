@@ -1,5 +1,3 @@
-# Socialstream
-
 <p align="center">
     <a href="https://github.com/joelbutcher/jetstream-team-transfer/actions">
         <img src="https://github.com/joelbutcher/jetstream-team-transfer/workflows/tests/badge.svg" alt="Build Status">
@@ -17,7 +15,7 @@
 
 ## Installation
 
-Getting started with Socialstream is a breeze. With a simple two-step process to get you on your way to creating the next big thing. Inspired by the simplicity of Jetstream's installation process, Socialstream follows the same 'installation':
+To get started, run the following commands:
 
 ```sh
 composer require joelbutcher/jetstream-team-transfer
