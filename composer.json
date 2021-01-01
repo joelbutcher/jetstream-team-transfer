@@ -1,0 +1,47 @@
+{
+    "name": "joelbutcher/jetstream-team-transfer",
+    "description": "A team transfer form for Laravel Jetstream",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/laravel/jetstream/issues",
+        "source": "https://github.com/laravel/jetstream"
+    },
+    "authors": [
+        {
+            "name": "Joel Butcher",
+            "email": "joel@joelbutcher.co.uk"
+        }
+    ],
+    "require": {
+        "illuminate/support": "^8.0",
+        "laravel/jetstream": "^1.6"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "livewire/livewire": "^2.3.5",
+        "phpunit/phpunit": "^9.3",
+        "inertiajs/inertia-laravel": "^0.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "JoelButcher\\JetstreamTeamTransfer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "stubs/app/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "JoelButcher\\JetstreamTeamTransfer\\ServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
