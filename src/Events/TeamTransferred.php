@@ -9,7 +9,7 @@ class TeamTransferred
     use Dispatchable;
 
     /**
-     * The team instance
+     * The team instance.
      *
      * @var mixed
      */
@@ -22,7 +22,7 @@ class TeamTransferred
      */
     public $from;
 
-     /**
+    /**
      * The team member that the team was transferred to.
      *
      * @var mixed
