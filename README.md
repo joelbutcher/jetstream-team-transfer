@@ -32,7 +32,7 @@ The install command will publish a new `Team` model utilising the `TransfersTeam
 To include the form in your teams view, add the following livewire component to the `teams/show.blade.php` file:
 
 ```php
-    @livewire('teams.team-transfer-form', ['team' => $team])
+@livewire('teams.team-transfer-form', ['team' => $team])
 ```
 
 ## Changelog
