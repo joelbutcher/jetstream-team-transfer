@@ -31,10 +31,10 @@ class TransferTeamTest extends TestCase
         $team = $this->createTeam();
 
         $team->users()->attach($otherUser = User::forceCreate([
-        'name' => 'Adam Wathan',
-        'email' => 'adam@laravel.com',
-        'password' => 'secret',
-    ]), ['role' => 'admin']);
+            'name' => 'Adam Wathan',
+            'email' => 'adam@laravel.com',
+            'password' => 'secret',
+        ]), ['role' => 'admin']);
 
         $action = new TransferTeam;
 

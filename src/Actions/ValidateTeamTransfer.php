@@ -18,7 +18,7 @@ class ValidateTeamTransfer
     {
         Gate::forUser($user)->authorize('transferTeam', $team);
 
-         if ($team->personal_team) {
+        if ($team->personal_team) {
             throw ValidationException::withMessages([
                 'team' => __('You may not transfer your personal team.'),
             ]);

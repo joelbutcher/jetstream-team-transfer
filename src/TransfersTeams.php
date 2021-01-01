@@ -16,14 +16,14 @@ trait TransfersTeams
     {
         $this->users()->detach($to);
 
-         if (! is_null(Jetstream::findRole('admin'))) {
+        if (! is_null(Jetstream::findRole('admin'))) {
             $this->users()->attach(
                 $from, ['role' => 'admin']
             );
         }
 
-         $this->owner()->associate($to);
+        $this->owner()->associate($to);
 
-         $this->save();
+        $this->save();
     }
 }

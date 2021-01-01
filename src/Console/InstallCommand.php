@@ -8,7 +8,7 @@ use Laravel\Jetstream\Jetstream;
 
 class InstallCommand extends Command
 {
-/**
+    /**
      * The name and signature of the console command.
      *
      * @var string
