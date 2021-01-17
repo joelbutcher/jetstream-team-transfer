@@ -62,6 +62,7 @@ class InstallCommand extends Command
 
         // Models...
         copy(__DIR__.'/../../stubs/app/Models/Team.php', app_path('Models/Team.php'));
+        copy(__DIR__.'/../../stubs/app/Policies/TeamPolicy.php', app_path('Policies/TeamPolicy.php'));
         copy(__DIR__.'/../../stubs/resources/views/teams/team-transfer-form.blade.php', resource_path('views/teams/team-transfer-form.blade.php'));
     }
 }
