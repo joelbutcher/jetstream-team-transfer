@@ -6,11 +6,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use JoelButcher\JetstreamTeamTransfer\Actions\TransferTeam;
+use Laravel\Jetstream\InteractsWithBanner;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Component;
 
 class TeamTransferForm extends Component
 {
+    use InteractsWithBanner;
+
     /**
      * The team instance.
      *
@@ -82,16 +85,26 @@ class TeamTransferForm extends Component
                 'password' => [__('This password does not match our records.')],
             ]);
         }
+        
+        $teamMember = Jetstream::findUserByEmailOrFail($this->transferTeamForm['email']);
+        
+        if ($this->team->hasUser($teamMember)) {
+            $this->dangerBanner('You cannot transfer team ownership to users outside of this team.');
+
+            $this->confirmingTransferTeam = false;
+
+            return;
+        }
 
         $transferrer->transfer(
             Auth::user(),
             $this->team,
-            Jetstream::findUserByEmailOrFail($this->transferTeamForm['email'])
+            $teamMember
         );
 
         $this->confirmingTransferTeam = false;
 
-        $this->emit('teamTransferred');
+        $this->emit('team-transferred');
     }
 
     /**
