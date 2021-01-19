@@ -85,9 +85,9 @@ class TeamTransferForm extends Component
                 'password' => [__('This password does not match our records.')],
             ]);
         }
-        
+
         $teamMember = Jetstream::findUserByEmailOrFail($this->transferTeamForm['email']);
-        
+
         if ($this->team->hasUser($teamMember)) {
             $this->dangerBanner('You cannot transfer team ownership to users outside of this team.');
 

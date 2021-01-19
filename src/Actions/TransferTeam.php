@@ -20,7 +20,7 @@ class TransferTeam
     public function transfer($user, $team, $teamMember)
     {
         $this->authorize($user, $team, $teamMember);
-        
+
         $this->ensureTeamUserExists($team, $teamMember);
 
         $team->transfer($user, $teamMember);
@@ -46,7 +46,7 @@ class TransferTeam
 
     /**
      * Ensure that the new owner is part of the team.
-     * 
+     *
      * @param  mixed  $team
      * @param  mixed  $user
      * @return void
@@ -55,7 +55,7 @@ class TransferTeam
     {
         if (! $team->hasUser($user)) {
             throw ValidationException::withMessages([
-                'You cannot transfer team ownership to users outside of this team.'
+                'You cannot transfer team ownership to users outside of this team.',
             ])->errorBag('transferTeam');
         }
     }
