@@ -89,6 +89,7 @@ class TeamTransferForm extends Component
         $teamMember = Jetstream::findUserByEmailOrFail($this->transferTeamForm['email']);
 
         if (!$this->team->hasUser($teamMember)) {
+        if (! $this->team->hasUser($teamMember)) {
             $this->dangerBanner('You cannot transfer team ownership to a user outside of this team.');
 
             $this->confirmingTeamTransfer= false;
