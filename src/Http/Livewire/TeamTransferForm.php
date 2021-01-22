@@ -91,7 +91,7 @@ class TeamTransferForm extends Component
         if (! $this->team->hasUser($teamMember)) {
             $this->dangerBanner('You cannot transfer team ownership to a user outside of this team.');
 
-            $this->confirmingTeamTransfer= false;
+            $this->confirmingTeamTransfer = false;
 
             return;
         }
