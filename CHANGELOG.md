@@ -7,10 +7,8 @@ This changelog follows [the Keep a Changelog standard](https://keepachangelog.co
 
 ## [v1.1.1 (2021-01-22)](https://github.com/joelbutcher/jetstream-team-transfer/compare/v1.1.0...v1.1.1)
 ### Fixed
+- Update CHANGELOG.md
 - Validate new owner belongs to team before transferring. (#5)
-- Formatting
-- 1.x-dev composer.json branch alias 
-- Updated StyleCI config presets
 
 ## [v1.1.0 (2021-01-22)](https://github.com/joelbutcher/jetstream-team-transfer/compare/v1.0.1...v1.1.0)
 ### Added
