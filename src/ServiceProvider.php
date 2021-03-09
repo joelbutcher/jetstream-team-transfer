@@ -31,7 +31,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'jetstream-team-transfer');
+        $this->loadViewsFrom(__DIR__.'/../stubs/resources/views', 'jetstream-team-transfer');
 
         $this->configureCommands();
     }
