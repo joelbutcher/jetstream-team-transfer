@@ -39,8 +39,8 @@ Check out the [CHANGELOG](CHANGELOG.md) in this repository for all the recent ch
 
 ## Maintainers
 
-Socialstream is developed and maintained by [Joel Butcher](https://joelbutcher.co.uk)
+This package is developed and maintained by [Joel Butcher](https://joelbutcher.co.uk)
 
 ## License
 
-Socialstream is open-sourced software licensed under the [MIT license](LICENSE.md).
+This package is open-sourced software licensed under the [MIT license](LICENSE.md).
