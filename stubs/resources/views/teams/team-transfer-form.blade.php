@@ -14,7 +14,7 @@
 
                 <x-slot name="content">
                     <div class="col-span-6">
-                        <div class="max-w-xl text-sm text-gray-600 dark:text-gray-600">
+                        <div class="max-w-xl text-sm text-gray-600 dark:text-gray-400">
                             {{ __('Please provider the email address of the team you would like to transfer the team to. The email address must be associated with an existing account.') }}
                         </div>
                     </div>
