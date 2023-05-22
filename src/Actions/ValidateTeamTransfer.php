@@ -2,6 +2,7 @@
 
 namespace JoelButcher\JetstreamTeamTransfer\Actions;
 
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 
@@ -10,11 +11,9 @@ class ValidateTeamTransfer
     /**
      * Validate that the team can be deleted by the given user.
      *
-     * @param  mixed  $user
-     * @param  mixed  $team
-     * @return void
+     * @throws AuthorizationException
      */
-    public function validate($user, $team)
+    public function validate(mixed $user, mixed $team): void
     {
         Gate::forUser($user)->authorize('transferTeam', $team);
 

@@ -2,8 +2,6 @@
 
 namespace JoelButcher\JetstreamTeamTransfer\Console;
 
-use App\Models\Team;
-use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;

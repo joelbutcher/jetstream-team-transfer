@@ -5,6 +5,7 @@ namespace JoelButcher\JetstreamTeamTransfer\Http\Livewire;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 use JoelButcher\JetstreamTeamTransfer\Actions\TransferTeam;
 use Laravel\Jetstream\Jetstream;
 use Livewire\Component;
@@ -13,51 +14,40 @@ class TeamTransferForm extends Component
 {
     /**
      * The team instance.
-     *
-     * @var mixed
      */
-    public $team;
+    public mixed $team = null;
 
     /**
      * Indicates if team transfer is being confirmed.
-     *
-     * @var bool
      */
-    public $confirmingTransferTeam;
+    public bool $confirmingTransferTeam = false;
 
     /**
      * The "transfer team" form state.
      *
-     * @var array
+     * @var array<int, string>
      */
-    public $transferTeamForm = [
+    public array $transferTeamForm = [
         'email',
     ];
 
     /**
      * The user's current password.
-     *
-     * @var string
      */
-    public $password = '';
+    public string $password = '';
 
     /**
      * Mount the component.
-     *
-     * @param  mixed  $team
-     * @return void
      */
-    public function mount($team)
+    public function mount(mixed $team): void
     {
         $this->team = $team;
     }
 
     /**
      * Confirm that the user would like to transfer the current team.
-     *
-     * @return void
      */
-    public function confirmTransferTeam()
+    public function confirmTransferTeam(): void
     {
         $this->resetErrorBag();
 
@@ -70,10 +60,8 @@ class TeamTransferForm extends Component
 
     /**
      * Transfer the current team.
-     *
-     * @return void
      */
-    public function transferTeam(TransferTeam $transferrer)
+    public function transferTeam(TransferTeam $action): void
     {
         $this->resetErrorBag();
 
@@ -83,7 +71,7 @@ class TeamTransferForm extends Component
             ]);
         }
 
-        $transferrer->transfer(
+        $action->transfer(
             Auth::user(),
             $this->team,
             Jetstream::findUserByEmailOrFail($this->transferTeamForm['email'])
@@ -96,10 +84,8 @@ class TeamTransferForm extends Component
 
     /**
      * Render the component.
-     *
-     * @return \Illuminate\View\View
      */
-    public function render()
+    public function render(): View
     {
         return view('teams.team-transfer-form');
     }
