@@ -28,15 +28,15 @@ class TransferTeamTest extends TestCase
     public function test_team_can_be_transferred()
     {
         $user = User::forceCreate([
-        'name' => 'Taylor Otwell',
-        'email' => 'taylor@laravel.com',
-        'password' => 'secret',
-    ]);
+            'name' => 'Taylor Otwell',
+            'email' => 'taylor@laravel.com',
+            'password' => 'secret',
+        ]);
 
-    $team = $user->ownedTeams()->create([
-        'name' => 'Test Team',
-        'personal_team' => false,
-    ]);
+        $team = $user->ownedTeams()->create([
+            'name' => 'Test Team',
+            'personal_team' => false,
+        ]);
 
         $team->users()->attach($otherUser = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -54,15 +54,15 @@ class TransferTeamTest extends TestCase
     public function test_team_transfer_can_be_validated()
     {
         $user = User::forceCreate([
-        'name' => 'Taylor Otwell',
-        'email' => 'taylor@laravel.com',
-        'password' => 'secret',
-    ]);
+            'name' => 'Taylor Otwell',
+            'email' => 'taylor@laravel.com',
+            'password' => 'secret',
+        ]);
 
-    $team = $user->ownedTeams()->create([
-        'name' => 'Test Team',
-        'personal_team' => false,
-    ]);
+        $team = $user->ownedTeams()->create([
+            'name' => 'Test Team',
+            'personal_team' => false,
+        ]);
 
         $action = new ValidateTeamTransfer;
 
@@ -76,15 +76,15 @@ class TransferTeamTest extends TestCase
         $this->expectException(ValidationException::class);
 
         $user = User::forceCreate([
-        'name' => 'Taylor Otwell',
-        'email' => 'taylor@laravel.com',
-        'password' => 'secret',
-    ]);
+            'name' => 'Taylor Otwell',
+            'email' => 'taylor@laravel.com',
+            'password' => 'secret',
+        ]);
 
-    $team = $user->ownedTeams()->create([
-        'name' => 'Test Team',
-        'personal_team' => false,
-    ]);
+        $team = $user->ownedTeams()->create([
+            'name' => 'Test Team',
+            'personal_team' => false,
+        ]);
 
         $team->forceFill(['personal_team' => true])->save();
 
@@ -100,15 +100,15 @@ class TransferTeamTest extends TestCase
         Jetstream::useUserModel(User::class);
 
         $user = User::forceCreate([
-        'name' => 'Taylor Otwell',
-        'email' => 'taylor@laravel.com',
-        'password' => 'secret',
-    ]);
+            'name' => 'Taylor Otwell',
+            'email' => 'taylor@laravel.com',
+            'password' => 'secret',
+        ]);
 
-    $team = $user->ownedTeams()->create([
-        'name' => 'Test Team',
-        'personal_team' => false,
-    ]);
+        $team = $user->ownedTeams()->create([
+            'name' => 'Test Team',
+            'personal_team' => false,
+        ]);
 
         $action = new ValidateTeamTransfer;
 

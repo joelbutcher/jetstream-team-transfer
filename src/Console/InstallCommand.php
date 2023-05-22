@@ -137,23 +137,23 @@ class InstallCommand extends Command
 
     private function installPolicy(): void
     {
-        $policy = <<<PHP
+        $policy = <<<'PHP'
     /**
      * Determine whether the user can transfer a team to another member.
      */
-    public function transferTeam(User \$user, Team \$team): bool
+    public function transferTeam(User $user, Team $team): bool
     {
-        return \$user->ownsTeam(\$team);
+        return $user->ownsTeam($team);
     }
 PHP;
 
-        $after = <<<PHP
+        $after = <<<'PHP'
     /**
      * Determine whether the user can remove team members.
      */
-    public function removeTeamMember(User \$user, Team \$team): bool
+    public function removeTeamMember(User $user, Team $team): bool
     {
-        return \$user->ownsTeam(\$team);
+        return $user->ownsTeam($team);
     }
 PHP;
 
