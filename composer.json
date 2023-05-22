@@ -13,28 +13,24 @@
         }
     ],
     "require": {
-        "illuminate/support": "^8.0",
-        "laravel/jetstream": "^1.6|^2.0"
+        "illuminate/support": "^10.0",
+        "laravel/jetstream": "^3.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^6.0",
-        "livewire/livewire": "^2.3.5",
-        "phpunit/phpunit": "^9.3",
-        "inertiajs/inertia-laravel": "^0.3"
+        "inertiajs/inertia-laravel": "^0.6.5",
+        "livewire/livewire": "^2.12",
+        "orchestra/testbench": "^8.0",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.3"
     },
     "autoload": {
         "psr-4": {
             "JoelButcher\\JetstreamTeamTransfer\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "App\\": "stubs/app/"
-        }
-    },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.x-dev"
+            "dev-main": "2.x-dev"
         },
         "laravel": {
             "providers": [

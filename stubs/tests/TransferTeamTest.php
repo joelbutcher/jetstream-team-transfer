@@ -1,17 +1,18 @@
 <?php
 
-namespace JoelButcher\JetstreamTeamTransfer\Tests;
+namespace Tests\Feature;
 
+use App\Models\Membership;
 use App\Models\Team;
+use App\Models\User;
+use App\Policies\TeamPolicy;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use JoelButcher\JetstreamTeamTransfer\Actions\TransferTeam;
 use JoelButcher\JetstreamTeamTransfer\Actions\ValidateTeamTransfer;
-use JoelButcher\JetstreamTeamTransfer\Tests\Fixtures\Membership;
-use JoelButcher\JetstreamTeamTransfer\Tests\Fixtures\TeamPolicy;
-use JoelButcher\JetstreamTeamTransfer\Tests\Fixtures\User;
 use Laravel\Jetstream\Jetstream;
+use Tests\TestCase;
 
 class TransferTeamTest extends TestCase
 {
@@ -26,9 +27,16 @@ class TransferTeamTest extends TestCase
 
     public function test_team_can_be_transferred()
     {
-        $this->migrate();
+        $user = User::forceCreate([
+        'name' => 'Taylor Otwell',
+        'email' => 'taylor@laravel.com',
+        'password' => 'secret',
+    ]);
 
-        $team = $this->createTeam();
+    $team = $user->ownedTeams()->create([
+        'name' => 'Test Team',
+        'personal_team' => false,
+    ]);
 
         $team->users()->attach($otherUser = User::forceCreate([
             'name' => 'Adam Wathan',
@@ -45,9 +53,16 @@ class TransferTeamTest extends TestCase
 
     public function test_team_transfer_can_be_validated()
     {
-        $this->migrate();
+        $user = User::forceCreate([
+        'name' => 'Taylor Otwell',
+        'email' => 'taylor@laravel.com',
+        'password' => 'secret',
+    ]);
 
-        $team = $this->createTeam();
+    $team = $user->ownedTeams()->create([
+        'name' => 'Test Team',
+        'personal_team' => false,
+    ]);
 
         $action = new ValidateTeamTransfer;
 
@@ -60,9 +75,16 @@ class TransferTeamTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        $this->migrate();
+        $user = User::forceCreate([
+        'name' => 'Taylor Otwell',
+        'email' => 'taylor@laravel.com',
+        'password' => 'secret',
+    ]);
 
-        $team = $this->createTeam();
+    $team = $user->ownedTeams()->create([
+        'name' => 'Test Team',
+        'personal_team' => false,
+    ]);
 
         $team->forceFill(['personal_team' => true])->save();
 
@@ -77,9 +99,16 @@ class TransferTeamTest extends TestCase
 
         Jetstream::useUserModel(User::class);
 
-        $this->migrate();
+        $user = User::forceCreate([
+        'name' => 'Taylor Otwell',
+        'email' => 'taylor@laravel.com',
+        'password' => 'secret',
+    ]);
 
-        $team = $this->createTeam();
+    $team = $user->ownedTeams()->create([
+        'name' => 'Test Team',
+        'personal_team' => false,
+    ]);
 
         $action = new ValidateTeamTransfer;
 
@@ -88,24 +117,5 @@ class TransferTeamTest extends TestCase
             'email' => 'adam@laravel.com',
             'password' => 'secret',
         ]), $team);
-    }
-
-    protected function createTeam()
-    {
-        $user = User::forceCreate([
-            'name' => 'Taylor Otwell',
-            'email' => 'taylor@laravel.com',
-            'password' => 'secret',
-        ]);
-
-        return $user->ownedTeams()->create([
-            'name' => 'Test Team',
-            'personal_team' => false,
-        ]);
-    }
-
-    protected function migrate()
-    {
-        $this->artisan('migrate', ['--database' => 'testbench'])->run();
     }
 }

@@ -12,10 +12,8 @@ class ServiceProvider extends BaseServiceProvider
 {
     /**
      * Register any application services.
-     *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->afterResolving(BladeCompiler::class, function () {
             if (Jetstream::hasTeamFeatures()) {
@@ -26,10 +24,8 @@ class ServiceProvider extends BaseServiceProvider
 
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'jetstream-team-transfer');
 
@@ -38,10 +34,8 @@ class ServiceProvider extends BaseServiceProvider
 
     /**
      * Configure the commands offered by the application.
-     *
-     * @return void
      */
-    protected function configureCommands()
+    protected function configureCommands(): void
     {
         if (! $this->app->runningInConsole()) {
             return;
@@ -50,18 +44,5 @@ class ServiceProvider extends BaseServiceProvider
         $this->commands([
             Console\InstallCommand::class,
         ]);
-    }
-
-    /**
-     * Boot any Inertia related services.
-     *
-     * @return void
-     */
-    protected function bootInertia()
-    {
-        $kernel = $this->app->make(Kernel::class);
-
-        $kernel->appendMiddlewareToGroup('web', ShareInertiaData::class);
-        $kernel->appendToMiddlewarePriority(ShareInertiaData::class);
     }
 }
