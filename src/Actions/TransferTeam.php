@@ -11,12 +11,9 @@ class TransferTeam
     /**
      * Transfer the given app to the given team.
      *
-     * @param  mixed  $user
-     * @param  mixed  $team
-     * @param  mixed  $teamMember
-     * @return void
+     * @throws AuthorizationException
      */
-    public function transfer($user, $team, $teamMember)
+    public function transfer(mixed $user, mixed $team, mixed $teamMember): void
     {
         $this->authorize($user, $team, $teamMember);
 
@@ -28,12 +25,9 @@ class TransferTeam
     /**
      * Authorize that the user can transfer team ownership to the team member.
      *
-     * @param  mixed  $user
-     * @param  mixed  $team
-     * @param  mixed  $teamMember
-     * @return void
+     * @throws AuthorizationException
      */
-    protected function authorize($user, $team, $teamMember)
+    protected function authorize(mixed $user, mixed $team, mixed $teamMember): void
     {
         if (! Gate::forUser($user)->check('transferTeam', $team) &&
             $user->id !== $teamMember->id) {

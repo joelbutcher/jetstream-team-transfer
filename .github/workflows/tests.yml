@@ -7,33 +7,51 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  tests:
-
+  stub-tests:
     runs-on: ubuntu-latest
+
     strategy:
       fail-fast: true
       matrix:
-        php: [7.3, 7.4, 8.0]
-        laravel: [^8.0]
+        laravel: [ 10 ]
+        stack: [ livewire ]
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }}
+    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: 8.2
           extensions: dom, curl, libxml, mbstring, zip
+          ini-values: error_reporting=E_ALL
           tools: composer:v2
           coverage: none
 
-      - name: Install dependencies
+      - name: Setup Laravel
         run: |
-           composer require "illuminate/contracts=${{ matrix.laravel }}" --no-update
-           composer update --prefer-dist --no-interaction --no-progress
+          composer create-project laravel/laravel:^${{ matrix.laravel }} .
+          composer require joelbutcher/jetstream-team-transfer:@dev --no-interaction --no-update
+          composer config repositories.joelbutcher/jetstream-team-transfer '{"type": "path", "url": "jetstream-team-transfer"}' --file composer.json
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          path: 'jetstream-team-transfer'
+
+      - name: Install Team Transfers
+        run: |
+          composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
+          php artisan jetstream-team-transfer:install --stack=${{ matrix.stack }} --teams --api --verification --pest
+
+      - name: Install NPM dependencies
+        run: npm i
+
+      - name: Compile assets
+        run: npm run build
 
       - name: Execute tests
-        run: vendor/bin/phpunit --verbose
+        run: ./vendor/bin/pest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"

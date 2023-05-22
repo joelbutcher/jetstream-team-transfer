@@ -4,7 +4,7 @@ namespace JoelButcher\JetstreamTeamTransfer;
 
 use Laravel\Jetstream\Jetstream;
 
-trait TransfersTeams
+trait CanBeTransferred
 {
     /**
      * Transfers the teams ownership to the given user.

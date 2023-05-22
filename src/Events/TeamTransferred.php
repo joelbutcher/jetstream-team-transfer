@@ -10,34 +10,25 @@ class TeamTransferred
 
     /**
      * The team instance.
-     *
-     * @var mixed
      */
-    public $team;
+    public mixed $team;
 
     /**
      * The original team owner.
-     *
-     * @var mixed
      */
-    public $from;
+    public mixed $from;
 
     /**
      * The team member that the team was transferred to.
-     *
-     * @var mixed
      */
-    public $to;
+    public mixed $to;
 
     /**
      * Create a new event instance.
      *
-     * @param  mixed  $team
-     * @param  mixed  $from
-     * @param  mixed  $to
      * @return void
      */
-    public function __construct($team, $from, $to)
+    public function __construct(mixed $team, mixed $from, mixed $to)
     {
         $this->team = $team;
         $this->from = $from;
