@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 use Laravel\Jetstream\Jetstream;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Process\Process;
 
 class InstallCommand extends Command
 {
@@ -16,6 +18,7 @@ class InstallCommand extends Command
      */
     protected $signature = 'jetstream-team-transfer:install
                             {--stack= : Indicates the desired stack to be installed (Livewire, Inertia)}
+                            {--dark : Indicate that dark mode support should be installed}
                             {--teams : Indicates if team support should be installed}
                             {--api : Indicates if API support should be installed}
                             {--verification : Indicates if email verification support should be installed}
@@ -96,6 +99,25 @@ class InstallCommand extends Command
 
         $this->installModelTrait();
         $this->installPolicy();
+
+        if (! $this->option('dark')) {
+            $this->removeDarkClasses((new Finder)
+                ->in(resource_path('views'))
+                ->name('*.blade.php')
+                ->filter(fn ($file) => $file->getPathname() !== resource_path('views/welcome.blade.php'))
+            );
+        }
+
+        if (file_exists(base_path('pnpm-lock.yaml'))) {
+            $this->runCommands(['pnpm install', 'pnpm run build']);
+        } elseif (file_exists(base_path('yarn.lock'))) {
+            $this->runCommands(['yarn install', 'yarn run build']);
+        } else {
+            $this->runCommands(['npm install', 'npm run build']);
+        }
+
+        $this->line('');
+        $this->components->info('Livewire scaffolding installed successfully.');
     }
 
     private function installModelTrait(): void
@@ -161,5 +183,29 @@ PHP;
         return file_exists(base_path('tests/Pest.php')) || $this->option('pest')
             ? __DIR__.'/../../stubs/pest-tests'
             : __DIR__.'/../../stubs/tests';
+    }
+
+    /**
+     * Remove Tailwind dark classes from the given files.
+     */
+    private function removeDarkClasses(Finder $finder): void
+    {
+        foreach ($finder as $file) {
+            file_put_contents($file->getPathname(), preg_replace('/\sdark:[^\s"\']+/', '', $file->getContents()));
+        }
+    }
+
+    /**
+     * Execute the given commands using the given environment.
+     */
+    protected function runCommands(array $commands, array $env = []): Process
+    {
+        $process = Process::fromShellCommandline(implode(' && ', $commands), null, $env, null, null);
+
+        $process->run(function ($type, $line) {
+            $this->output->write('    '.$line);
+        });
+
+        return $process;
     }
 }
