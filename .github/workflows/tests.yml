@@ -33,6 +33,7 @@ jobs:
           composer create-project laravel/laravel:^${{ matrix.laravel }} .
           composer require joelbutcher/jetstream-team-transfer:@dev --no-interaction --no-update
           composer config repositories.joelbutcher/jetstream-team-transfer '{"type": "path", "url": "jetstream-team-transfer"}' --file composer.json
+          composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
 
       - name: Checkout code
         uses: actions/checkout@v3
@@ -43,9 +44,7 @@ jobs:
         run: php artisan jetstream:install livewire --teams --api --verification --pest --dark
 
       - name: Install Team Transfers
-        run: |
-          composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
-          php artisan jetstream-team-transfer:install --stack=${{ matrix.stack }} --teams --api --verification --pest --dark
+        run: php artisan jetstream-team-transfer:install --stack=${{ matrix.stack }} --teams --api --verification --pest --dark
 
       - name: Install NPM dependencies
         run: npm i
