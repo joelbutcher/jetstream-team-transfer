@@ -39,10 +39,13 @@ jobs:
         with:
           path: 'jetstream-team-transfer'
 
+      - name: Install Laravel Jetstream
+        run: php artisan jetstream:install livewire --teams --api --verification --pest --dark
+
       - name: Install Team Transfers
         run: |
           composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
-          php artisan jetstream-team-transfer:install --stack=${{ matrix.stack }} --teams --api --verification --pest
+          php artisan jetstream-team-transfer:install --stack=${{ matrix.stack }} --teams --api --verification --pest --dark
 
       - name: Install NPM dependencies
         run: npm i
