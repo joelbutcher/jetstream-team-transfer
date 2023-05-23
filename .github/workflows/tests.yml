@@ -28,17 +28,19 @@ jobs:
           tools: composer:v2
           coverage: none
 
-      - name: Setup Laravel
+      - name: Setup Base Project
         run: |
           composer create-project laravel/laravel:^${{ matrix.laravel }} .
           composer require joelbutcher/jetstream-team-transfer:@dev --no-interaction --no-update
           composer config repositories.joelbutcher/jetstream-team-transfer '{"type": "path", "url": "jetstream-team-transfer"}' --file composer.json
-          composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
 
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           path: 'jetstream-team-transfer'
+      
+      - name: Install Project Dependencies
+        run: composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
 
       - name: Install Laravel Jetstream
         run: php artisan jetstream:install livewire --teams --api --verification --pest --dark
