@@ -29,13 +29,13 @@ jobs:
           tools: composer:v2
           coverage: none
 
+      - name: Setup Laravel
+        run: composer create-project laravel/laravel:^${{ matrix.laravel }} .
+
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           path: 'jetstream-team-transfer'
-
-      - name: Setup Laravel
-        run: composer create-project laravel/laravel:^${{ matrix.laravel }} .
 
       - name: Install Jetstream
         run: |
