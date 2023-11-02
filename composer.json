@@ -14,7 +14,7 @@
     ],
     "require": {
         "illuminate/support": "^10.0",
-        "laravel/jetstream": "^3.0"
+        "laravel/jetstream": "^3.0|^4.0"
     },
     "require-dev": {
         "inertiajs/inertia-laravel": "^0.6.5",
@@ -26,6 +26,14 @@
     "autoload": {
         "psr-4": {
             "JoelButcher\\JetstreamTeamTransfer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": [
+                "stubs/pest-tests/",
+                "stubs/tests/"
+            ]
         }
     },
     "extra": {
