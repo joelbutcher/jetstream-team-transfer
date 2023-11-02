@@ -10,7 +10,7 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  jetstream-stub-tests:
+  stubs-tests:
     runs-on: ubuntu-latest
 
     strategy:
@@ -22,7 +22,7 @@ jobs:
         stack: [ livewire ]
         tester: [ phpunit, pest ]
 
-    name: Test Laravel Jetstream Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} – ${{ matrix.tester }}
+    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }} – ${{ matrix.tester }}
 
     steps:
       - name: Setup PHP

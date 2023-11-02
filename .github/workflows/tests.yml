@@ -17,7 +17,7 @@ jobs:
         jetstream: [ 3, 4 ]
         stack: [ livewire ]
 
-    name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
+    name: Test - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
 
     steps:
       - name: Setup PHP
