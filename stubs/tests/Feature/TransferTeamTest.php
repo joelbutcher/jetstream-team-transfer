@@ -7,6 +7,7 @@ use App\Models\Team;
 use App\Models\User;
 use App\Policies\TeamPolicy;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use JoelButcher\JetstreamTeamTransfer\Actions\TransferTeam;
@@ -16,6 +17,8 @@ use Tests\TestCase;
 
 class TransferTeamTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function setUp(): void
     {
         parent::setUp();
