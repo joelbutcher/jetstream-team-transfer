@@ -2,65 +2,41 @@ name: tests
 
 on:
   push:
+    branches:
+      - main
+      - '*.x'
   pull_request:
   schedule:
     - cron: '0 0 * * *'
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
 
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
+        php: [ 8.1, 8.2, 8.3 ]
         laravel: [ 10 ]
-        jetstream: [ 3, 4 ]
-        stack: [ livewire ]
 
-    name: Test - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
+    name: Run Tests – PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
-          extensions: dom, curl, libxml, mbstring, zip
-          ini-values: error_reporting=E_ALL
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pdo, pdo_sqlite
           tools: composer:v2
           coverage: none
 
-      - name: Setup Laravel
-        run: composer create-project laravel/laravel:^${{ matrix.laravel }} .
-
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          path: 'jetstream-team-transfer'
-
-      - name: Install Jetstream
+      - name: Install dependencies
         run: |
-          composer require laravel/jetstream:^${{ matrix.jetstream }}
-          php artisan jetstream:install ${{ matrix.stack }} --teams \
-          ${{ matrix.tester == 'pest' && '--pest' || '' }} \
-          ${{ matrix.stack == 'inertia' && '--ssr' || '' }}
-
-      - name: Install Team Transfers
-        run: |
-          composer require joelbutcher/jetstream-team-transfer:@dev --no-interaction --no-update
-          composer config repositories.joelbutcher/jetstream-team-transfer '{"type": "path", "url": "jetstream-team-transfer"}' --file composer.json
-          composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
-          php artisan jetstream-team-transfer:install --stack=${{ matrix.stack }} --teams \
-          ${{ matrix.tester == 'pest' && '--pest' || '' }} \
-          ${{ matrix.stack == 'inertia' && '--ssr' || '' }}
-
-      - name: Install NPM dependencies
-        run: npm i
-
-      - name: Compile assets
-        run: npm run build
+          composer require "illuminate/contracts=^${{ matrix.laravel }}" --no-update
+          composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
         run: ./vendor/bin/pest
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
