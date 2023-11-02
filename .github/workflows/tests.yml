@@ -14,6 +14,7 @@ jobs:
       fail-fast: true
       matrix:
         laravel: [ 10 ]
+        jetstream: [ 3, 4 ]
         stack: [ livewire ]
 
     name: Test Stubs - PHP ${{matrix.php }} – Laravel ${{ matrix.laravel }} - ${{ matrix.stack }}
@@ -38,7 +39,7 @@ jobs:
 
       - name: Install Jetstream
         run: |
-          composer require laravel/jetstream
+          composer require laravel/jetstream:^${{ matrix.jetstream }}
           php artisan jetstream:install ${{ matrix.stack }} --teams \
           ${{ matrix.tester == 'pest' && '--pest' || '' }} \
           ${{ matrix.stack == 'inertia' && '--ssr' || '' }}

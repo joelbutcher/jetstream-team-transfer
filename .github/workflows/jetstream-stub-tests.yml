@@ -18,6 +18,7 @@ jobs:
       matrix:
         php: [ 8.1, 8.2, 8.3 ]
         laravel: [ 10 ]
+        jetstream: [ 3, 4 ]
         stack: [ livewire ]
         tester: [ phpunit, pest ]
 
@@ -43,7 +44,7 @@ jobs:
 
       - name: Install Jetstream
         run: |
-          composer require laravel/jetstream
+          composer require laravel/jetstream:^${{ matrix.jetstream }}
           php artisan jetstream:install ${{ matrix.stack }} --teams \
           ${{ matrix.tester == 'pest' && '--pest' || '' }} \
           ${{ matrix.stack == 'inertia' && '--ssr' || '' }}
