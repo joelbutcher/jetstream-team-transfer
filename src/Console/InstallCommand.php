@@ -3,28 +3,28 @@
 namespace JoelButcher\JetstreamTeamTransfer\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Console\PromptsForMissingInput;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use JoelButcher\JetstreamTeamTransfer\Enums\InstallStack;
 use Laravel\Jetstream\Jetstream;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+use function Laravel\Prompts\alert;
+use function Laravel\Prompts\error;
+use function Laravel\Prompts\select;
 
-class InstallCommand extends Command
+class InstallCommand extends Command implements PromptsForMissingInput
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'jetstream-team-transfer:install
-                            {--stack= : Indicates the desired stack to be installed (Livewire, Inertia)}
-                            {--dark : Indicate that dark mode support should be installed}
-                            {--teams : Indicates if team support should be installed}
-                            {--api : Indicates if API support should be installed}
-                            {--verification : Indicates if email verification support should be installed}
-                            {--pest : Indicates if Pest should be installed}
-                            {--ssr : Indicates if Inertia SSR support should be installed}
-                            {--composer=global : Absolute path to the Composer binary which should be used to install packages}';
+    protected $signature = 'jetstream-team-transfer:install {stack : The development stack that should be used (Livewire, Inertia)}
+                            {--pest : Indicates if Pest should be installed}';
 
     /**
      * The console command description.
@@ -40,48 +40,68 @@ class InstallCommand extends Command
     {
         // Check if Jetstream has been installed.
         if (! file_exists(config_path('jetstream.php'))) {
-            $this->components->warn('Jetstream hasn\'t been installed. Installing now...');
+            alert('Jetstream is not installed.');
 
-            $stack = $this->option('stack') ?: $this->components->choice('Which stack would you like to use [inertia] or [livewire]?', ['inertia', 'livewire']);
+            \Laravel\Prompts\info('Please run the following commands to install Jetstream:');
+            \Laravel\Prompts\info('composer require laravel/jetstream');
+            \Laravel\Prompts\info('php artisan jetstream:install <stack> <options>');
 
-            if (! in_array($stack, ['inertia', 'livewire'])) {
-                $this->components->error('Invalid stack. Supported stacks are [inertia] and [livewire].');
-
-                return Command::FAILURE;
-            }
-
-            $this->call('jetstream:install', [
-                'stack' => $stack,
-                '--teams' => $this->option('teams'),
-                '--api' => $this->option('api'),
-                '--verification' => $this->option('verification'),
-                '--pest' => $this->option('pest'),
-                '--ssr' => $this->option('ssr'),
-                '--composer' => $this->option('composer'),
-            ]);
-        } else {
-            $stack = config('jetstream.stack');
+            return self::FAILURE;
         }
 
         if (! Jetstream::hasTeamFeatures()) {
-            $this->components->error('This package requires the "teams" feature for Jetstream to be enabled.');
+            error('This package requires the "teams" feature for Jetstream to be enabled.');
 
-            return Command::FAILURE;
+            return self::FAILURE;
         }
 
-        if ($stack === 'livewire') {
-            $this->installLivewireStack();
-        }
+        $callback = match (InstallStack::from(config('jetstream.stack'))) {
+            InstallStack::Livewire => function () {
+                $this->installLivewireStack();
 
-        if ($stack === 'inertia') {
-            $this->components->error(
-                string: 'Sorry, support for Inertia is not ready yet.'
-            );
+                return self::SUCCESS;
+            },
+            InstallStack::Inertia => function () {
+                $this->components->error(
+                    string: 'Sorry, support for Inertia is not ready yet.'
+                );
 
-            return Command::FAILURE;
-        }
+                return self::FAILURE;
+            },
+        };
 
-        return Command::SUCCESS;
+        return $callback();
+    }
+
+    /**
+     * Prompt for missing input arguments using the returned questions.
+     */
+    protected function promptForMissingArgumentsUsing(): array
+    {
+        return [
+            'stack' => function () {
+                if ($this->isJetstreamInstalled()) {
+                    return config('jetstream.stack');
+                }
+
+                return select(
+                    label: 'Which stack would you like to use?',
+                    options: collect(InstallStack::cases())->mapWithKeys(
+                        fn(InstallStack $stack) => [$stack->value => $stack->label()],
+                    ),
+                    default: 'inertia',
+                );
+            }
+        ];
+    }
+
+    protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
+    {
+        $input->setOption('pest', select(
+                label: 'Which testing framework do you prefer?',
+                options: ['PHPUnit', 'Pest'],
+                default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+            ) === 'Pest');
     }
 
     private function installLivewireStack(): void
@@ -100,7 +120,7 @@ class InstallCommand extends Command
         $this->installModelTrait();
         $this->installPolicy();
 
-        if (! $this->option('dark')) {
+        if (! $this->hasFilesWithDarkMode()) {
             $this->removeDarkClasses((new Finder)
                 ->in(resource_path('views'))
                 ->name('*.blade.php')
@@ -180,7 +200,7 @@ PHP;
      */
     private function getTestStubsPath(): string
     {
-        return file_exists(base_path('tests/Pest.php')) || $this->option('pest')
+        return $this->option('pest')
             ? __DIR__.'/../../stubs/pest-tests'
             : __DIR__.'/../../stubs/tests';
     }
@@ -208,4 +228,31 @@ PHP;
 
         return $process;
     }
+
+    /**
+     * Determine if Laravel Jetstream is installed.
+     */
+    private function isJetstreamInstalled(): bool
+    {
+        return file_exists(config_path('jetstream.php'));
+    }
+
+    protected function isUsingPest(): bool
+    {
+        return file_exists(base_path('tests/Pest.php'));
+    }
+
+    private function hasFilesWithDarkMode(): bool
+    {
+        // Find all the files published by the starter kit that have dark mode class utilities,
+        // ignoring any and all files that will have been overwritten by Socialstream
+        $files = (new Finder)
+            ->in([resource_path('views'), resource_path('js')])
+            ->name(['*.blade.php', '*.vue'])
+            ->notPath(['Pages/Welcome.vue', 'Pages/Welcome.vue'])
+            ->contains('/\sdark:[^\s"\']+/');
+
+        return $files->count() > 0;
+    }
+
 }
