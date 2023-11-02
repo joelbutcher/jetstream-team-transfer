@@ -49,7 +49,7 @@ jobs:
           composer require joelbutcher/jetstream-team-transfer:@dev --no-interaction --no-update
           composer config repositories.joelbutcher/jetstream-team-transfer '{"type": "path", "url": "jetstream-team-transfer"}' --file composer.json
           composer update "joelbutcher/jetstream-team-transfer" --prefer-dist --no-interaction --no-progress -W
-          php artisan jetstream-team-transfer:install ${{ matrix.stack }} --teams \
+          php artisan jetstream-team-transfer:install ${{ matrix.stack }} \
           ${{ matrix.tester == 'pest' && '--pest' || '' }} \
           ${{ matrix.stack == 'inertia' && '--ssr' || '' }}
 
