@@ -115,7 +115,7 @@ class InstallCommand extends Command implements PromptsForMissingInput
 
         // Tests...
         $stubs = $this->getTestStubsPath();
-        copy($stubs.'/TransferTeamTest.php', base_path('tests/Feature/TransferTeamTest.php'));
+        copy($stubs.'/Feature/TransferTeamTest.php', base_path('tests/Feature/TransferTeamTest.php'));
 
         $this->installModelTrait();
         $this->installPolicy();

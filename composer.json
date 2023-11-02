@@ -30,6 +30,14 @@
             "JoelButcher\\JetstreamTeamTransfer\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": [
+                "stubs/pest-tests/",
+                "stubs/tests/"
+            ]
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-main": "2.x-dev"
