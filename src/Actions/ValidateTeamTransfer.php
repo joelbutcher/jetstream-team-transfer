@@ -15,7 +15,7 @@ class ValidateTeamTransfer
      */
     public function validate(mixed $user, mixed $team): void
     {
-        Gate::forUser($user)->authorize('transferTeam', $team);
+        Gate::forUser($user)->authorize('transfer', $team);
 
         if ($team->personal_team) {
             throw ValidationException::withMessages([

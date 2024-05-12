@@ -53,7 +53,7 @@ class TeamTransferForm extends Component
 
         $this->password = '';
 
-        $this->dispatchBrowserEvent('confirming-team-transfer');
+        $this->dispatch('confirming-team-transfer');
 
         $this->confirmingTransferTeam = true;
     }
@@ -79,7 +79,7 @@ class TeamTransferForm extends Component
 
         $this->confirmingTransferTeam = false;
 
-        $this->emit('teamTransferred');
+        $this->dispatch('teamTransferred');
     }
 
     /**

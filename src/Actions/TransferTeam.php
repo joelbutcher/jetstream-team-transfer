@@ -29,7 +29,7 @@ class TransferTeam
      */
     protected function authorize(mixed $user, mixed $team, mixed $teamMember): void
     {
-        if (! Gate::forUser($user)->check('transferTeam', $team) &&
+        if (! Gate::forUser($user)->check('transfer', $team) &&
             $user->id !== $teamMember->id) {
             throw new AuthorizationException;
         }
