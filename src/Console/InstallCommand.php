@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Process\Process;
+
 use function Laravel\Prompts\alert;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\select;
@@ -87,21 +88,21 @@ class InstallCommand extends Command implements PromptsForMissingInput
                 return select(
                     label: 'Which stack would you like to use?',
                     options: collect(InstallStack::cases())->mapWithKeys(
-                        fn(InstallStack $stack) => [$stack->value => $stack->label()],
+                        fn (InstallStack $stack) => [$stack->value => $stack->label()],
                     ),
                     default: 'inertia',
                 );
-            }
+            },
         ];
     }
 
     protected function afterPromptingForMissingArguments(InputInterface $input, OutputInterface $output): void
     {
         $input->setOption('pest', select(
-                label: 'Which testing framework do you prefer?',
-                options: ['PHPUnit', 'Pest'],
-                default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
-            ) === 'Pest');
+            label: 'Which testing framework do you prefer?',
+            options: ['PHPUnit', 'Pest'],
+            default: $this->isUsingPest() ? 'Pest' : 'PHPUnit'
+        ) === 'Pest');
     }
 
     private function installLivewireStack(): void
@@ -254,5 +255,4 @@ PHP;
 
         return $files->count() > 0;
     }
-
 }
